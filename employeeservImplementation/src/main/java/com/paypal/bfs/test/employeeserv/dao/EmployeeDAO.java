@@ -26,13 +26,9 @@ public class EmployeeDAO {
 
 	public Employee saveEmployee(Employee employee) throws ValidationException {
 
-		if(employee.getId() != null && fetchById(employee.getId()).isPresent()) {
-			return employee;
-		}
-
 		EmployeeEntity employeeEntity = formEmployeeEntityFromEmployeeResource(employee);
 		entityManager.persist(employeeEntity);
-		
+
 		return formEmployeeFromEmployeeEntity(employeeEntity);
 	}
 
@@ -40,14 +36,14 @@ public class EmployeeDAO {
 
 		EmployeeEntity employeeEntity = entityManager.find(EmployeeEntity.class, id);
 
-		if(employeeEntity == null) {
+		if (employeeEntity == null) {
 			return Optional.empty();
 		}
 
 		return Optional.of(formEmployeeFromEmployeeEntity(employeeEntity));
 	}
 
-	private static EmployeeEntity formEmployeeEntityFromEmployeeResource(Employee employee)  throws ValidationException {
+	private static EmployeeEntity formEmployeeEntityFromEmployeeResource(Employee employee) throws ValidationException {
 
 		EmployeeEntity employeeEntity = new EmployeeEntity();
 
@@ -60,7 +56,7 @@ public class EmployeeDAO {
 		try {
 			date = format.parse(employee.getDateOfBirth());
 		} catch (ParseException e) {
-			 throw new ValidationException("Provide Date format as yyyy-mm-dd");
+			throw new ValidationException("Provide Date format as yyyy-mm-dd");
 		}
 
 		employeeEntity.setDateOfBirth(date);
@@ -90,9 +86,9 @@ public class EmployeeDAO {
 		employee.setId(employeeEntity.getId());
 		employee.setFirstName(employeeEntity.getFirstName());
 		employee.setLastName(employeeEntity.getLastName());
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
+
 		employee.setDateOfBirth(dateFormat.format(employeeEntity.getDateOfBirth()));
 		employee.setAddress(formAddressFromAddressEntity(employeeEntity.getAddress()));
 
@@ -112,50 +108,5 @@ public class EmployeeDAO {
 
 		return address;
 	}
-
-	//	private static List<Employee> emp = new ArrayList<Employee>();
-	//
-	//	private static int count = 3;
-	//
-	//	static {
-	//
-	//		Employee e1 = new Employee();
-	//		e1.setId(1);
-	//		e1.setFirstName("sasidhar");
-	//		e1.setLastName("redd");
-	//
-	//		Employee e2 = new Employee();
-	//		e2.setId(2);
-	//		e2.setFirstName("ash");
-	//		e2.setLastName("latha");
-	//
-	//		emp.add(e1);
-	//		emp.add(e2);
-	//	}
-	//
-	//	public Optional<Employee> getEmployee(int id) {
-	//		for (Employee e : emp) {
-	//			if (e.getId() == id) {
-	//				return Optional.of(e);
-	//			}
-	//		}
-	//		return Optional.empty();
-	//	}
-	//
-	//	public Employee saveEmployee(Employee employee) {
-	//
-	//		if (employee.getId() == null) {
-	//			employee.setId(++count);
-	//		}
-	//
-	//		emp.add(employee);
-	//
-	//		return employee;
-	//
-	//	}
-	//	
-	//	public List<Employee> getEmployees() {
-	//		return emp;
-	//	}
 
 }
